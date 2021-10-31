@@ -25,10 +25,12 @@ class _PriceScreenState extends State<PriceScreen> {
     return DropdownButton<String>(
       value: selectedCurrency,
       items: dropdownItems,
+      //バーから選択したもの value
       onChanged: (value) {
         setState(() {
           //TODO 2: Call getData() when the picker/dropdown changes.
           selectedCurrency = value;
+          getData();
         });
       },
     );
@@ -46,7 +48,9 @@ class _PriceScreenState extends State<PriceScreen> {
       onSelectedItemChanged: (selectedIndex) {
         print(selectedIndex);
         //TODO 1: Save the selected currency to the property selectedCurrency
+        selectedCurrency = currenciesList[selectedIndex];
         //TODO 2: Call getData() when the picker/dropdown changes.
+        getData();
       },
       children: pickerItems,
     );
@@ -56,7 +60,7 @@ class _PriceScreenState extends State<PriceScreen> {
 
   void getData() async {
     try {
-      double data = await CoinData().getCoinData();
+      double data = await CoinData().getCoinData(selectedCurrency);
       setState(() {
         bitcoinValue = data.toStringAsFixed(0);
       });
@@ -93,7 +97,7 @@ class _PriceScreenState extends State<PriceScreen> {
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
                   //TODO 5: Update the currency name depending on the selectedCurrency.
-                  '1 BTC = $bitcoinValue USD',
+                  '1 BTC = $bitcoinValue $selectedCurrency',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
